@@ -21,17 +21,6 @@ void addEdge(int u, int v) {
     revG[v].push_back(u);
 }
 
-int reachable, last;
-void dfs(int node) {
-    reachable++;
-    visited[node] = 1;
-    for (int i = 0; i < (int)revG[node].size(); i++) {
-        if (!visited[revG[node][i]]) {
-            dfs(revG[node][i]);
-        }
-    }
-}
-
 void oriDfs(int node) {
     visited[node] = 1;
     int n = oriG[node].size();
@@ -67,7 +56,6 @@ int scc(int n) {
     int cnt = 0;
     for (int i = (int)revDfsNode.size() - 1; i >= 0; i--) {
         if (!visited[revDfsNode[i]]) {
-            last = revDfsNode[i];
             revDfs(revDfsNode[i], cnt++);
         }
     }
@@ -75,29 +63,20 @@ int scc(int n) {
 }
 
 int main(void) {
-    int n, m;
-    scanf("%d%d", &n, &m);
-    for (int i = 0; i < m; i++) {
-        int u, v;
-        scanf("%d%d", &u, &v);
-        addEdge(u - 1, v - 1);
-    }
-
-    int nSCC = scc(n);
-    reachable = 0;
-    memset(visited, 0, sizeof(visited));
-    dfs(last);
-    if (reachable == n) {
-        int ans = 0;
-        for (int i = 0; i < n; i++) {
-            if (sccIndex[i] == nSCC - 1) {
-                ans++;
-            }
+    int n;
+    scanf("%d", &n);
+    for (int i = 0; i < n; i++) {
+        int m;
+        scanf("%d", &m);
+        for (int j = 0; j < m; j++) {
+            int v;
+            scanf("%d", &v);
+            addEdge(i, v);
         }
-        printf("%d\n", ans);
-    } else {
-        printf("0\n");
     }
-
+    int nSCC = scc(n);
+    for (int i = 0; i < n; i++) {
+        printf("%d : %d\n", i, sccIndex[i]);
+    }
     return 0;
 }
